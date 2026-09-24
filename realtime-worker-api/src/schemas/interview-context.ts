@@ -11,6 +11,9 @@ export const interviewContextPatchSchema = z.object({
   resumeText: z.string().max(MAX_RESUME_TEXT_CHARS).nullable().optional(),
   resumeFileName: z.string().max(255).nullable().optional(),
   jobDescription: z.string().max(MAX_JD_TEXT_CHARS).nullable().optional(),
+  englishLevel: z.enum(["B1", "B2", "C1", "C2"]).nullable().optional(),
+  responseLength: z.enum(["brief", "standard", "detailed"]).nullable().optional(),
+  naturalEnglish: z.boolean().nullable().optional(),
 });
 
 export type InterviewContextPatch = z.infer<typeof interviewContextPatchSchema>;

@@ -58,6 +58,9 @@ export const userInterviewContext = sqliteTable("user_interview_context", {
   resumeText: text("resumeText"),
   resumeFileName: text("resumeFileName"),
   jobDescription: text("jobDescription"),
+  englishLevel: text("englishLevel"),
+  responseLength: text("responseLength"),
+  naturalEnglish: integer("naturalEnglish", { mode: "boolean" }),
   updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull(),
 });
 

@@ -35,6 +35,9 @@ export interface UserInterviewContext {
   resumeText: string | null;
   resumeFileName: string | null;
   jobDescription: string | null;
+  englishLevel: "B1" | "B2" | "C1" | "C2" | null;
+  responseLength: "brief" | "standard" | "detailed" | null;
+  naturalEnglish: boolean | null;
   updatedAt: string | Date | null;
 }
 

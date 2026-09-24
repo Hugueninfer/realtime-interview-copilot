@@ -24,12 +24,20 @@ import {
 } from "@/lib/app-session-storage";
 import { ricFetch } from "@/lib/ric-fetch";
 import type { UserInterviewContext } from "@/lib/types";
+import {
+  DEFAULT_RESPONSE_PREFERENCES,
+  type EnglishLevel,
+  type ResponseLength,
+} from "@/lib/interview";
 
 export interface InterviewContextFields {
   interviewNotes?: string | null;
   resumeText?: string | null;
   resumeFileName?: string | null;
   jobDescription?: string | null;
+  englishLevel?: EnglishLevel | null;
+  responseLength?: ResponseLength | null;
+  naturalEnglish?: boolean | null;
 }
 
 const EMPTY: UserInterviewContext = {
@@ -37,6 +45,9 @@ const EMPTY: UserInterviewContext = {
   resumeText: null,
   resumeFileName: null,
   jobDescription: null,
+  englishLevel: DEFAULT_RESPONSE_PREFERENCES.englishLevel,
+  responseLength: DEFAULT_RESPONSE_PREFERENCES.responseLength,
+  naturalEnglish: DEFAULT_RESPONSE_PREFERENCES.naturalEnglish,
   updatedAt: null,
 };
 
@@ -46,8 +57,14 @@ type InterviewContextValue = {
   resumeText: string | null;
   resumeFileName: string | null;
   jobDescription: string;
+  englishLevel: EnglishLevel;
+  responseLength: ResponseLength;
+  naturalEnglish: boolean;
   setInterviewNotes: (value: string) => void;
   setJobDescription: (value: string) => void;
+  setEnglishLevel: (value: EnglishLevel) => void;
+  setResponseLength: (value: ResponseLength) => void;
+  setNaturalEnglish: (value: boolean) => void;
   setResumeParsed: (text: string, fileName: string) => void;
   clearResume: () => void;
   isLoading: boolean;
@@ -69,6 +86,9 @@ function applyServerContext(
     setResumeText: (v: string | null) => void;
     setResumeFileName: (v: string | null) => void;
     setJobDescription: (v: string) => void;
+    setEnglishLevel: (v: EnglishLevel) => void;
+    setResponseLength: (v: ResponseLength) => void;
+    setNaturalEnglish: (v: boolean) => void;
   },
 ) {
   setters.setContext(server);
@@ -76,6 +96,15 @@ function applyServerContext(
   setters.setResumeText(server.resumeText);
   setters.setResumeFileName(server.resumeFileName);
   setters.setJobDescription(server.jobDescription ?? "");
+  setters.setEnglishLevel(
+    server.englishLevel ?? DEFAULT_RESPONSE_PREFERENCES.englishLevel,
+  );
+  setters.setResponseLength(
+    server.responseLength ?? DEFAULT_RESPONSE_PREFERENCES.responseLength,
+  );
+  setters.setNaturalEnglish(
+    server.naturalEnglish ?? DEFAULT_RESPONSE_PREFERENCES.naturalEnglish,
+  );
 }
 
 export function InterviewContextProvider({
@@ -89,6 +118,15 @@ export function InterviewContextProvider({
   const [resumeText, setResumeText] = useState<string | null>(null);
   const [resumeFileName, setResumeFileName] = useState<string | null>(null);
   const [jobDescription, setJobDescription] = useState("");
+  const [englishLevel, setEnglishLevel] = useState<EnglishLevel>(
+    DEFAULT_RESPONSE_PREFERENCES.englishLevel,
+  );
+  const [responseLength, setResponseLength] = useState<ResponseLength>(
+    DEFAULT_RESPONSE_PREFERENCES.responseLength,
+  );
+  const [naturalEnglish, setNaturalEnglish] = useState(
+    DEFAULT_RESPONSE_PREFERENCES.naturalEnglish,
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -103,8 +141,19 @@ export function InterviewContextProvider({
         resumeText,
         resumeFileName,
         jobDescription: jobDescription.trim(),
+        englishLevel,
+        responseLength,
+        naturalEnglish,
       }),
-    [interviewNotes, resumeText, resumeFileName, jobDescription],
+    [
+      interviewNotes,
+      resumeText,
+      resumeFileName,
+      jobDescription,
+      englishLevel,
+      responseLength,
+      naturalEnglish,
+    ],
   );
 
   const markFieldsSaved = useCallback(() => {
@@ -124,6 +173,9 @@ export function InterviewContextProvider({
       setResumeText,
       setResumeFileName,
       setJobDescription,
+      setEnglishLevel,
+      setResponseLength,
+      setNaturalEnglish,
     });
   }, []);
 
@@ -145,6 +197,15 @@ export function InterviewContextProvider({
         resumeText: data.context?.resumeText ?? null,
         resumeFileName: data.context?.resumeFileName ?? null,
         jobDescription: (data.context?.jobDescription ?? "").trim(),
+        englishLevel:
+          data.context?.englishLevel ??
+          DEFAULT_RESPONSE_PREFERENCES.englishLevel,
+        responseLength:
+          data.context?.responseLength ??
+          DEFAULT_RESPONSE_PREFERENCES.responseLength,
+        naturalEnglish:
+          data.context?.naturalEnglish ??
+          DEFAULT_RESPONSE_PREFERENCES.naturalEnglish,
       });
     } catch (err: unknown) {
       if (err instanceof Error && err.name === "AbortError") return;
@@ -162,14 +223,26 @@ export function InterviewContextProvider({
         JSON.stringify({
           interviewNotes,
           resumeText,
-          resumeFileName,
-          jobDescription,
+        resumeFileName,
+        jobDescription,
+        englishLevel,
+        responseLength,
+        naturalEnglish,
         }),
       );
     } catch {
       /* non-fatal */
     }
-  }, [interviewNotes, resumeText, resumeFileName, jobDescription, isHydrated]);
+  }, [
+    interviewNotes,
+    resumeText,
+    resumeFileName,
+    jobDescription,
+    englishLevel,
+    responseLength,
+    naturalEnglish,
+    isHydrated,
+  ]);
 
   useEffect(() => {
     if (session?.user) {
@@ -187,6 +260,21 @@ export function InterviewContextProvider({
           if (typeof draft.jobDescription === "string") {
             setJobDescription(draft.jobDescription);
           }
+          if (
+            ["B1", "B2", "C1", "C2"].includes(draft.englishLevel ?? "")
+          ) {
+            setEnglishLevel(draft.englishLevel as EnglishLevel);
+          }
+          if (
+            ["brief", "standard", "detailed"].includes(
+              draft.responseLength ?? "",
+            )
+          ) {
+            setResponseLength(draft.responseLength as ResponseLength);
+          }
+          if (typeof draft.naturalEnglish === "boolean") {
+            setNaturalEnglish(draft.naturalEnglish);
+          }
         } catch {
           /* ignore corrupt draft */
         }
@@ -200,6 +288,9 @@ export function InterviewContextProvider({
       setResumeText(null);
       setResumeFileName(null);
       setJobDescription("");
+      setEnglishLevel(DEFAULT_RESPONSE_PREFERENCES.englishLevel);
+      setResponseLength(DEFAULT_RESPONSE_PREFERENCES.responseLength);
+      setNaturalEnglish(DEFAULT_RESPONSE_PREFERENCES.naturalEnglish);
       setIsHydrated(false);
       setError(null);
       writeAppSession(APP_SESSION_KEYS.interviewDraft, "");
@@ -234,6 +325,15 @@ export function InterviewContextProvider({
             resumeText: data.context.resumeText,
             resumeFileName: data.context.resumeFileName,
             jobDescription: (data.context.jobDescription ?? "").trim(),
+            englishLevel:
+              data.context.englishLevel ??
+              DEFAULT_RESPONSE_PREFERENCES.englishLevel,
+            responseLength:
+              data.context.responseLength ??
+              DEFAULT_RESPONSE_PREFERENCES.responseLength,
+            naturalEnglish:
+              data.context.naturalEnglish ??
+              DEFAULT_RESPONSE_PREFERENCES.naturalEnglish,
           });
         } else {
           await fetchContext();
@@ -256,6 +356,9 @@ export function InterviewContextProvider({
       resumeText,
       resumeFileName,
       jobDescription: jobDescription.trim() || null,
+      englishLevel,
+      responseLength,
+      naturalEnglish,
     });
   }, [
     updateContext,
@@ -263,6 +366,9 @@ export function InterviewContextProvider({
     resumeText,
     resumeFileName,
     jobDescription,
+    englishLevel,
+    responseLength,
+    naturalEnglish,
   ]);
 
   // Debounced server sync — drafts already persist to sessionStorage on change.
@@ -304,8 +410,14 @@ export function InterviewContextProvider({
     resumeText,
     resumeFileName,
     jobDescription,
+    englishLevel,
+    responseLength,
+    naturalEnglish,
     setInterviewNotes,
     setJobDescription,
+    setEnglishLevel,
+    setResponseLength,
+    setNaturalEnglish,
     setResumeParsed,
     clearResume,
     isLoading,

@@ -15,7 +15,7 @@ import { useInterviewContext } from "@/components/InterviewContextProvider";
 import { useCopilotSession } from "@/components/CopilotSessionProvider";
 import { useTab } from "@/components/TabContext";
 import { authClient } from "@/lib/auth-client";
-import { buildContextBlock } from "@/lib/prompt-context";
+import { buildInterviewContextBlock } from "@/lib/interview-context-builder";
 import { trackEvent } from "@/lib/session-tracking";
 import { FLAGS, type HistoryData } from "@/lib/types";
 
@@ -37,6 +37,12 @@ export function Copilot({ addInSavedData, isActive = false }: CopilotProps) {
     setJobDescription,
     setResumeParsed,
     clearResume,
+    englishLevel,
+    responseLength,
+    naturalEnglish,
+    setEnglishLevel,
+    setResponseLength,
+    setNaturalEnglish,
     isLoading: contextLoading,
     isSaving,
     error: contextError,
@@ -58,12 +64,30 @@ export function Copilot({ addInSavedData, isActive = false }: CopilotProps) {
 
   const effectiveBg = useMemo(
     () =>
-      buildContextBlock({
-        existingBg: interviewNotes,
-        resumeText,
-        jobDescription,
+      buildInterviewContextBlock({
+        mode: "interview",
+        transcript: "",
+        candidate: {
+          interviewNotes,
+          resumeText,
+          resumeFileName,
+          jobDescription,
+          responsePreferences: {
+            englishLevel,
+            responseLength,
+            naturalEnglish,
+          },
+        },
       }),
-    [interviewNotes, resumeText, jobDescription],
+    [
+      interviewNotes,
+      resumeText,
+      resumeFileName,
+      jobDescription,
+      englishLevel,
+      responseLength,
+      naturalEnglish,
+    ],
   );
 
   const {
@@ -211,6 +235,12 @@ export function Copilot({ addInSavedData, isActive = false }: CopilotProps) {
         onJobDescriptionChange={setJobDescription}
         onResumeParsed={setResumeParsed}
         onClearResume={clearResume}
+        englishLevel={englishLevel}
+        responseLength={responseLength}
+        naturalEnglish={naturalEnglish}
+        onEnglishLevelChange={setEnglishLevel}
+        onResponseLengthChange={setResponseLength}
+        onNaturalEnglishChange={setNaturalEnglish}
         isSaving={isSaving}
         isLoading={contextLoading}
         formRef={formRef}

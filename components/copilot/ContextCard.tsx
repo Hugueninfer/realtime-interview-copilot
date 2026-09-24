@@ -15,6 +15,7 @@ import { hasAttachedContext } from "@/lib/prompt-context";
 import { parseResumeFile } from "@/lib/resume-parser";
 import { cn } from "@/lib/utils";
 import { FLAGS } from "@/lib/types";
+import type { EnglishLevel, ResponseLength } from "@/lib/interview";
 
 const RecorderTranscriber = dynamic(() => import("@/components/recorder"), {
   ssr: false,
@@ -32,6 +33,12 @@ interface ContextCardProps {
   onJobDescriptionChange: (value: string) => void;
   onResumeParsed: (text: string, fileName: string) => void;
   onClearResume: () => void;
+  englishLevel: EnglishLevel;
+  responseLength: ResponseLength;
+  naturalEnglish: boolean;
+  onEnglishLevelChange: (value: EnglishLevel) => void;
+  onResponseLengthChange: (value: ResponseLength) => void;
+  onNaturalEnglishChange: (value: boolean) => void;
   isSaving?: boolean;
   isLoading?: boolean;
   formRef: RefObject<HTMLFormElement | null>;
@@ -51,6 +58,12 @@ export const ContextCard = memo(function ContextCard({
   onJobDescriptionChange,
   onResumeParsed,
   onClearResume,
+  englishLevel,
+  responseLength,
+  naturalEnglish,
+  onEnglishLevelChange,
+  onResponseLengthChange,
+  onNaturalEnglishChange,
   isSaving = false,
   isLoading = false,
   formRef,
@@ -223,6 +236,48 @@ export const ContextCard = memo(function ContextCard({
             {parseError && (
               <p className="text-[10px] text-destructive">{parseError}</p>
             )}
+            <div>
+              <Label className="mb-1 block">Response preferences</Label>
+              <div className="flex flex-wrap items-center gap-2 text-xs text-text-secondary">
+                <label className="flex items-center gap-1">
+                  English
+                  <select
+                    value={englishLevel}
+                    onChange={(e) =>
+                      onEnglishLevelChange(e.target.value as EnglishLevel)
+                    }
+                    className="rounded border border-border-subtle/50 bg-black/15 px-1.5 py-1 text-xs"
+                  >
+                    <option value="B1">B1</option>
+                    <option value="B2">B2</option>
+                    <option value="C1">C1</option>
+                    <option value="C2">C2</option>
+                  </select>
+                </label>
+                <label className="flex items-center gap-1">
+                  Length
+                  <select
+                    value={responseLength}
+                    onChange={(e) =>
+                      onResponseLengthChange(e.target.value as ResponseLength)
+                    }
+                    className="rounded border border-border-subtle/50 bg-black/15 px-1.5 py-1 text-xs"
+                  >
+                    <option value="brief">Brief</option>
+                    <option value="standard">Standard</option>
+                    <option value="detailed">Detailed</option>
+                  </select>
+                </label>
+                <label className="flex items-center gap-1">
+                  <Switch
+                    checked={naturalEnglish}
+                    onCheckedChange={onNaturalEnglishChange}
+                  />
+                  Natural English
+                </label>
+              </div>
+            </div>
+
             <div>
               <Label htmlFor="job_description" className="mb-1 block">
                 Job description

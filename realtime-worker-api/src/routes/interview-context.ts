@@ -18,6 +18,9 @@ const EMPTY_CONTEXT = {
   resumeText: null as string | null,
   resumeFileName: null as string | null,
   jobDescription: null as string | null,
+  englishLevel: "C1" as string | null,
+  responseLength: "standard" as string | null,
+  naturalEnglish: true as boolean | null,
   updatedAt: null as Date | null,
 };
 
@@ -46,6 +49,9 @@ export async function handleGetInterviewContext(
           resumeText: row.resumeText,
           resumeFileName: row.resumeFileName,
           jobDescription: row.jobDescription,
+          englishLevel: row.englishLevel,
+          responseLength: row.responseLength,
+          naturalEnglish: row.naturalEnglish,
           updatedAt: row.updatedAt,
         }
       : EMPTY_CONTEXT,
@@ -97,6 +103,18 @@ export async function handlePatchInterviewContext(
       fields.jobDescription !== undefined
         ? fields.jobDescription
         : (existing?.jobDescription ?? null),
+    englishLevel:
+      fields.englishLevel !== undefined
+        ? fields.englishLevel
+        : (existing?.englishLevel ?? "C1"),
+    responseLength:
+      fields.responseLength !== undefined
+        ? fields.responseLength
+        : (existing?.responseLength ?? "standard"),
+    naturalEnglish:
+      fields.naturalEnglish !== undefined
+        ? fields.naturalEnglish
+        : (existing?.naturalEnglish ?? true),
     updatedAt: now,
   };
 
@@ -116,6 +134,8 @@ export async function handlePatchInterviewContext(
     metadata: {
       hasResume: !!next.resumeText?.trim(),
       hasJd: !!next.jobDescription?.trim(),
+      englishLevel: next.englishLevel,
+      responseLength: next.responseLength,
     },
   });
 
