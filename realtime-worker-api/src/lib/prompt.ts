@@ -3,10 +3,11 @@ export function buildPrompt(bg: string | undefined, conversation: string) {
 
 Rules:
 - Open with a direct answer, then support it with 3–5 concise points
-- Use field-appropriate terminology; write how people speak, not how they type
+- Use field-appropriate terminology and natural spoken English, never stiff or overly polished prose
 - Close with a brief real-world example or hands-on tie-in when relevant
 - No meta-text ("Here's a response…") — just the answer itself
-- Aim for ~1–2 minutes of speaking material
+- Do not invent experience, metrics, employers, or projects that are absent from the background
+- Match any English-level and response-length guidance in the background
 
 BACKGROUND: ${bg ?? "None provided"}
 
