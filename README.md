@@ -94,6 +94,24 @@ bun install
 bun run electron:dev
 ```
 
+### Private local backend (no Cloudflare)
+
+The fork includes a Bun + SQLite API that keeps accounts, candidate profiles,
+job descriptions, and saved notes on this computer. New local accounts are
+approved immediately.
+
+```powershell
+Copy-Item realtime-worker-api/.dev.vars.example realtime-worker-api/.dev.vars
+bun --cwd realtime-worker-api install
+bun run electron:local
+```
+
+Add `GOOGLE_GENERATIVE_AI_API_KEY` to `.dev.vars` for AI answers and
+`DEEPGRAM_API_KEY` for live transcription. The local database is created at
+`realtime-worker-api/.local-data/copilot.sqlite`; both files are ignored by
+Git. Cloudflare remains available only for hosted deployments through the
+existing Worker entry point.
+
 Build installers with:
 
 ```bash

@@ -377,8 +377,8 @@ export function AuthWizard({
                     lineHeight: 1.5,
                   }}
                 >
-                  New accounts go through a quick admin approval. You&apos;ll be
-                  able to message the admin from the next screen.
+                  In local mode, your account is stored on this computer and
+                  is ready to use immediately.
                 </p>
               </div>
             </div>
