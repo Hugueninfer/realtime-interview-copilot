@@ -1,5 +1,6 @@
 .dev.vars
 .wrangler/
+.local-data/
 node_modules/
 dist/
 .cache/

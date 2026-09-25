@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "dev:local": "wrangler dev --config wrangler.local.toml --persist-to .wrangler/local",
+    "dev:local": "bun --watch local-server/server.ts",
+    "start:local": "bun local-server/server.ts",
     "deploy": "wrangler deploy",
     "test": "node --import tsx --test src/**/*.test.ts"
   },
   "devDependencies": {
+    "@types/bun": "latest",
     "@cloudflare/workers-types": "^4.20260702.1",
     "@types/node": "^26.2.0",
     "drizzle-kit": "^0.31.10",
