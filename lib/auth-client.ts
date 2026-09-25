@@ -8,7 +8,7 @@ export const authClient = createAuthClient({
     "null",
     "file://",
     "http://localhost:3000",
-    "https://realtime-worker-api-prod.vedgupta.in",
+    BACKEND_API_URL,
   ],
 });
 

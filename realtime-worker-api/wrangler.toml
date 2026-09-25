@@ -1,4 +1,4 @@
-name = "realtime-worker-api-prod"
+name = "hugueninfer-interview-copilot-api"
 main = "src/index.ts"
 compatibility_date = "2025-03-25"
 compatibility_flags = ["nodejs_compat"]
@@ -23,13 +23,15 @@ crons = ["0 * * * *"]
 
 [[d1_databases]]
 binding = "DB"
-database_name = "realtime-interview-copilot-db"
-database_id = "836c3d2f-b104-419d-ad77-e1ac5c38a397"
+database_name = "hugueninfer-interview-copilot-db"
+# Create this database in your Cloudflare account, then replace this value.
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
 migrations_dir = "drizzle"
 
 [[kv_namespaces]]
 binding = "CONFIG_KV"
-id = "6a114e2cb0504aed86bc71df3df45c7b"
+# Create this namespace in your Cloudflare account, then replace this value.
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
 
 [[unsafe.bindings]]
 name = "COMPLETION_LIMITER"

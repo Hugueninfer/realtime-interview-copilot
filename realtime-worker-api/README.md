@@ -2,7 +2,7 @@
 
 > Cloudflare Worker backend API for Realtime Interview Copilot.  
 > **Version**: 0.1.0  
-> **Production URL**: `https://realtime-worker-api-prod.vedgupta.in`
+> **Production URL**: Set this to your own Worker URL before building the app.
 
 ---
 
@@ -78,19 +78,21 @@ GEMINI_MODEL=gemini-flash-lite-latest # Optional
 ### 3. Setup Database
 
 ```bash
-# Create D1 database
-npx wrangler d1 create realtime-interview-copilot-db
+# Create isolated Cloudflare resources for this fork
+bunx wrangler d1 create hugueninfer-interview-copilot-db
+bunx wrangler kv namespace create CONFIG_KV
 
-# Update wrangler.toml with database_id
+# Update `wrangler.toml` with the returned D1 and KV IDs. Never reuse IDs
+# from the upstream project.
 
 # Generate migrations
 npx drizzle-kit generate
 
 # Apply migrations (local)
-npx wrangler d1 migrations apply realtime-interview-copilot-db --local
+bunx wrangler d1 migrations apply hugueninfer-interview-copilot-db --local
 
 # Apply migrations (production)
-npx wrangler d1 migrations apply realtime-interview-copilot-db --remote
+bunx wrangler d1 migrations apply hugueninfer-interview-copilot-db --remote
 ```
 
 ### 4. Run Development Server
@@ -106,7 +108,7 @@ npx wrangler dev
 ```bash
 bun run deploy
 # or
-npx wrangler deploy
+bunx wrangler deploy
 ```
 
 ---
