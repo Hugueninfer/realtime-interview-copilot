@@ -1,0 +1,26 @@
+# Local-only Worker configuration. It never contacts or deploys to Cloudflare.
+name = "hugueninfer-interview-copilot-local"
+main = "src/index.ts"
+compatibility_date = "2025-03-25"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hugueninfer-interview-copilot-local"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "drizzle"
+
+[[kv_namespaces]]
+binding = "CONFIG_KV"
+id = "00000000000000000000000000000000"
+
+[[unsafe.bindings]]
+name = "COMPLETION_LIMITER"
+type = "ratelimit"
+namespace_id = "1001"
+simple = { limit = 30, period = 60 }
+
+[vars]
+QUOTA_ENFORCEMENT = "false"
+QUOTA_RECORD_CONSUMPTION = "true"
+AUTO_APPROVE_NEW_USERS = "true"

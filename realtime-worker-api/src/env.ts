@@ -9,6 +9,8 @@ export interface Env {
   BETTER_AUTH_URL: string;
   /** Comma-separated emails allowed to use /api/admin/* (self-hosted dashboard). */
   ADMIN_EMAILS?: string;
+  /** Development-only convenience for a private local install. */
+  AUTO_APPROVE_NEW_USERS?: string;
   /** Cloudflare account id that owns the AI Gateway (fallback when not set via admin dashboard). */
   CF_ACCOUNT_ID?: string;
   /** Cloudflare AI Gateway id (fallback when not set via admin dashboard). */

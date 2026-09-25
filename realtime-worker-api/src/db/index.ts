@@ -8,6 +8,7 @@ export interface Env {
   BETTER_AUTH_SECRET: string;
   BETTER_AUTH_URL: string;
   ADMIN_EMAILS?: string;
+  AUTO_APPROVE_NEW_USERS?: string;
   CF_ACCOUNT_ID?: string;
   CF_GATEWAY_ID?: string;
   CF_API_TOKEN?: string;

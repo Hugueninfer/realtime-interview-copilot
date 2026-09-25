@@ -8,6 +8,8 @@ GEMINI_MODEL=gemini-flash-lite-latest
 BETTER_AUTH_SECRET=your-random-secret-here
 BETTER_AUTH_URL=http://localhost:8787
 ADMIN_EMAILS=you@example.com
+# For a private local install only. Do not use this in a public deployment.
+AUTO_APPROVE_NEW_USERS=true
 
 # Comma-separated emails allowed to access /api/admin/* and the /admin UI
 ADMIN_EMAILS=you@example.com

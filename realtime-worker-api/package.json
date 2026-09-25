@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
+    "dev:local": "wrangler dev --config wrangler.local.toml --persist-to .wrangler/local",
     "deploy": "wrangler deploy",
     "test": "node --import tsx --test src/**/*.test.ts"
   },

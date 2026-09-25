@@ -47,7 +47,9 @@ export const auth = (env: Env & { CONFIG_KV?: KVNamespace }) => {
         isApproved: {
           type: "boolean",
           required: false,
-          defaultValue: false,
+          // Local-first installs are single-user by default. Production keeps
+          // the approval gate unless an operator explicitly enables it.
+          defaultValue: env.AUTO_APPROVE_NEW_USERS === "true",
         },
       },
     },
